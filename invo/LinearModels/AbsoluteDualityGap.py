@@ -126,7 +126,9 @@ class AbsoluteDualityGap():
         points = [np.mat(point).T for point in points]
         assert self._fop, 'No forward model given.'
         feasible = checkFeasibility(points, self.A, self.b, self.tol)
-        if feasible or self.force_feasible_method:
+        if self.positive_cost:
+            self.error = self._solveBruteForce(points)
+        elif feasible or self.force_feasible_method:
             self.error = self._solveHyperplaneProjection(points)
         else:
             self.error = self._solveBruteForce(points)
